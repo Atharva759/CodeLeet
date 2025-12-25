@@ -86,46 +86,93 @@ function App() {
 
       {/* Scrollable Results */}
       <div className="overflow-y-auto flex-1 space-y-2 pr-1">
-        {history.map((item: any) => {
-            const isExpanded = expandedContest === item.contest.titleSlug;
+  {history.map((item: any) => {
+      const isExpanded = expandedContest === item.contest.titleSlug;
+      
+      const pageNum = Math.ceil(item.ranking / 25);
+      const replayUrl = `https://leetcode.com/contest/${item.contest.titleSlug}/ranking/${pageNum}/?region=global_v2`;
+      
+      return (
+        <div key={item.contest.titleSlug} className="bg-gray-800 rounded border border-gray-700 overflow-hidden">
+          
+          {/* Header Row */}
+          <div className="p-3 flex justify-between items-center">
             
-            return (
-              <div key={item.contest.titleSlug} className="bg-gray-800 rounded border border-gray-700 overflow-hidden">
-                {/* Contest Header - Clickable */}
-                <div 
-                  className="p-3 flex justify-between items-center cursor-pointer hover:bg-gray-700 transition-colors"
-                  onClick={() => handleAnalyzeContest(item.contest.titleSlug)}
-                >
-                  <span className="font-bold text-sm text-gray-200">{item.contest.title}</span>
-                  <span className="text-xs bg-gray-900 px-2 py-1 rounded text-gray-400">
-                     #{item.ranking}
-                  </span>
-                </div>
+            {/* Title  */}
+            <div 
+              className="cursor-pointer hover:text-green-400 transition-colors flex-1"
+              onClick={() => handleAnalyzeContest(item.contest.titleSlug)}
+            >
+              <span className="font-bold text-sm text-gray-200 block">{item.contest.title}</span>
+            </div>
 
-                {/* Expanded Analysis Area */}
-                {isExpanded && (
-                  <div className="bg-black p-3 space-y-2 border-t border-gray-700">
-                    {analyzing ? (
-                        <div className="text-center text-xs text-gray-400 animate-pulse">Running Analysis...</div>
-                    ) : (
-                        Object.entries(analysisResults).map(([qTitle, report]) => (
-                            <div key={qTitle} className="text-xs flex flex-col mb-2">
-                                <div className="flex justify-between font-bold">
-                                    <span className="text-gray-400 w-1/3 truncate" title={qTitle}>{qTitle}</span>
-                                    <span className={report.color}>{report.status}</span>
-                                </div>
-                                <div className="text-gray-500 pl-2">
-                                    {report.details.map((d, i) => <div key={i}>• {d}</div>)}
-                                </div>
-                            </div>
-                        ))
-                    )}
+            {/* Right Side: Rank + Watch Button */}
+            <div className="flex items-center gap-3">
+              <span className="text-xs bg-gray-900 px-2 py-1 rounded text-gray-400">
+                 #{item.ranking}
+              </span>
+              
+              {/* --- 2. The Link Button --- */}
+              <a 
+                href={replayUrl} 
+                target="_blank" 
+                rel="noreferrer"
+                className="text-xs bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded transition-colors no-underline flex items-center gap-1"
+                title="Open LeetCode Replay Page"
+                onClick={(e) => e.stopPropagation()} // Stop it from expanding the card when clicking the link
+              >
+                📺
+              </a>
+            </div>
+
+          </div>
+
+          {/* Expanded Analysis Area  */}
+          {isExpanded && (
+            <div className="bg-black p-3 space-y-2 border-t border-gray-700">
+               {analyzing ? (
+                  /* Loading State */
+                  <div className="text-center text-xs text-gray-400 animate-pulse py-2">
+                    Running Analysis...
                   </div>
-                )}
-              </div>
-            );
-        })}
-      </div>
+               ) : (
+                  /* Results List */
+                  Object.entries(analysisResults).map(([qTitle, report]) => (
+                      <div key={qTitle} className="text-xs flex flex-col mb-3">
+                          {/* Question Title & Status */}
+                          <div className="flex justify-between font-bold items-center">
+                              <span className="text-gray-300 w-2/3 truncate pr-2" title={qTitle}>
+                                {qTitle}
+                              </span>
+                              <span className={`${report.color} whitespace-nowrap`}>
+                                {report.status}
+                              </span>
+                          </div>
+                          
+                          {/* Details (Bullets) */}
+                          {report.details.length > 0 && (
+                            <div className="text-gray-500 pl-2 mt-1 border-l-2 border-gray-800 ml-1">
+                                {report.details.map((d, i) => (
+                                  <div key={i} className="leading-tight py-0.5">• {d}</div>
+                                ))}
+                            </div>
+                          )}
+                      </div>
+                  ))
+               )}
+               
+               {/* Empty State Check */ }
+               {!analyzing && Object.keys(analysisResults).length === 0 && (
+                 <div className="text-gray-500 text-xs text-center">No results found.</div>
+               )}
+            </div>
+          )}
+        </div>
+      );
+  })}
+</div>
+      
+      
     </div>
   );
 }

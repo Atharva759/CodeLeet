@@ -39,28 +39,28 @@ export async function getUserContestHistory(username:string){
         .slice(0,5);
 }
 
+export async function getContestQuestions(contestSlug: string) {
+  const query = `
+    query contestQuestionList($contestSlug: String!) {
+      contestQuestionList(contestSlug: $contestSlug) {
+        title
+        titleSlug
+        questionId
+      }
+    }
+  `;
 
+  console.log(" Fetching Questions for:", contestSlug);
 
-export async function getContestQuestions(contestSlug:string){
+  const data = await leetCodeQuery(query, { contestSlug: contestSlug });
 
-    const query=`
-        query contestQuestionList($contestSlug:String!){
-            contest(contestSlug:$contestSlug){
-                questions{
-                    title
-                    titleSlug
-                    questionId
-                }
-            }
-        }
-    `;
+  if (data.errors) {
+    console.error(" API Error:", data.errors);
+    throw new Error("LeetCode API Error");
+  }
 
-    const data=await leetCodeQuery(query,{contestSlug} )
-
-    return data.data.contest.questions;
-
+  return data.data.contestQuestionList;
 }
-
 
 
 export async function getReplayEvents(username: string, contestSlug: string, questionSlug: string) {

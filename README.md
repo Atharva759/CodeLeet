@@ -26,6 +26,9 @@ You need a browser extension to run the script.
 *   **Chrome/Edge/Brave:** Install Tampermonkey.
 *   **Firefox:** Install Greasemonkey or Tampermonkey.
 
+
+__(Make sure to allow external scripts in tapermonkey before installing my script, else tapermonkey wont run external scripts!)__
+
 ### Step 2: Install the Script
 Click the link below to install the script directly from this repository. Your script manager will detect the file and ask for confirmation.
 

@@ -3,7 +3,7 @@ export function attachInterceptor() {
   // @ts-ignore
   const realWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
-  console.log("🕵️ Detective: Interceptor Initiated on", realWindow === window ? "Standard Window" : "Unsafe Window");
+  console.log(" Detective: Interceptor Initiated on", realWindow === window ? "Standard Window" : "Unsafe Window");
 
   const originalFetch = realWindow.fetch;
 
@@ -11,7 +11,7 @@ export function attachInterceptor() {
     const [resource, config] = args;
 
     if (typeof resource === 'string' && resource.includes('/check/')) {
-      console.log("🎯 DETECTED CHECK:", resource);
+      // console.log("DETECTED CHECK:", resource);
       
       try {
         const response = await originalFetch(resource, config);

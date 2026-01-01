@@ -4,6 +4,9 @@ import { analyzeEvents, CheatReport } from './analysis';
 import FloatingButton from './components/FloatingButton';
 import ContestCard from './components/ContestCard';
 import detectiveLogo from '../assets/logo.png';
+import SettingsView from './components/settingsView';
+
+
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +17,9 @@ function App() {
   const [expandedContest, setExpandedContest] = useState<string | null>(null);
   const [analysisResults, setAnalysisResults] = useState<Record<string, CheatReport>>({});
   const [analyzing, setAnalyzing] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<'scan'|'settings'>('scan');
+
 
   useEffect(() => {
     const checkUser = () => {
@@ -73,6 +79,9 @@ function App() {
         
         {/* Header */}
         <div className="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center shrink-0">
+          
+
+          {/*logo and name */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full border border-gray-600 overflow-hidden">
               <img src={detectiveLogo} alt="Logo" className="w-full h-full object-cover" />
@@ -82,12 +91,45 @@ function App() {
               <p className="text-xs text-green-400 font-mono">@{username}</p>
             </div>
           </div>
-          <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white hover:bg-gray-700 p-1 rounded">✕</button>
+
+
+
+          
+
+          <div className="flex gap-2">
+             {/* Settings Toggle Button */}
+             <button 
+               onClick={() => setActiveTab(activeTab === 'scan' ? 'settings' : 'scan')}
+               className={`p-1.5 rounded transition-colors ${activeTab === 'settings' ? 'bg-green-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-700'}`}
+               title="Settings"
+             >
+               {/* Gear Icon SVG */}
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+               </svg>
+             </button>
+
+             {/* Close Button */}
+            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white hover:bg-gray-700 p-1 rounded">✕</button>
+           </div>
+
+
+
+          {/*Close button*/ }
+          {/* <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white hover:bg-gray-700 p-1 rounded">✕</button> */}
+        
+        
+        
         </div>
 
-        {/* Content */}
-        <div className="p-4 overflow-y-auto flex-1">
-          {/* Module: Contest Scanner */}
+
+
+        <div className='p-4 overflow-y-auto flex-1'>
+
+          {activeTab=='scan'?(
+            <>
+              {/* Module: Contest Scanner */}
           <div className="mb-4">
              <div className="flex justify-between items-end mb-2">
                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Contest History</h3>
@@ -119,8 +161,20 @@ function App() {
                <div className="text-center text-gray-600 text-xs py-4 italic">Ready to scan.</div>
              )} */}
           </div>
+            </>
+            ) : (
+              <SettingsView/>
+          )}
+          
         </div>
-        
+
+
+
+
+
+
+
+
         {/* Footer */}
         <div className="bg-gray-800 p-2 text-center border-t border-gray-700 text-[10px] text-gray-500">
           v1.1 

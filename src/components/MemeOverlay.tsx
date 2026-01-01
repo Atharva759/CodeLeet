@@ -3,7 +3,7 @@ import acceptedImg from '../../assets/accepted.png';
 import rejectedImg from '../../assets/rejected.png';
 import gtaAcceptedSound from '../../assets/gta-accepted.mp3'
 import gtaRejectedSound from '../../assets/gta-rejected.mp3'
-
+import { loadSettings } from '../settings';
 
 const playSound = (type: 'VICTORY' | 'DEFEAT') => {
 
@@ -17,7 +17,20 @@ export default function MemeOverlay() {
   const [mounted, setMounted] = useState(false); // denotes if in DOM or not
   const [visible, setVisible] = useState(false); 
   const [type, setType] = useState<'VICTORY' | 'DEFEAT' | null>(null);
+  const [settings, setSettings] = useState(loadSettings());
 
+
+  useEffect(() => {
+
+    const updateSettings = (e:any)=>setSettings(e.detail);
+    window.addEventListener('codeleet-settings-change',updateSettings);
+    return ()=>window.removeEventListener('codeleet-settings-change',updateSettings);
+
+
+  }, [])
+  
+
+  
   useEffect(() => {
     
     // @ts-ignore
@@ -31,11 +44,19 @@ export default function MemeOverlay() {
       else if ([11, 14, 15, 20].includes(status)) newType = 'DEFEAT';
 
       if (newType) {
-        setType(newType);
-        setMounted(true);
 
-        setTimeout(() => setVisible(true), 50);
-        playSound(newType);
+        if(settings.overlayEnabled){
+          setType(newType);
+          setMounted(true);
+          setTimeout(() => setVisible(true), 50);
+
+        }
+        
+
+        if(settings.soundEnabled){
+          playSound(newType);
+        }
+
 
         setTimeout(() => {
           setVisible(false); 

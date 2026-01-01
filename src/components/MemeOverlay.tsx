@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import acceptedImg from '../../assets/accepted.png';
 import rejectedImg from '../../assets/rejected.png';
+import gtaAcceptedSound from '../../assets/gta-accepted.mp3'
+import gtaRejectedSound from '../../assets/gta-rejected.mp3'
+
 
 const playSound = (type: 'VICTORY' | 'DEFEAT') => {
-  const victoryUrl = "https://www.myinstants.com/media/sounds/gta-san-andreas-mission-passed-sound.mp3";
-  const defeatUrl = "https://www.myinstants.com/media/sounds/gta-v-death-sound-effect-102.mp3";
-  const audio = new Audio(type === 'VICTORY' ? victoryUrl : defeatUrl);
+
+  const audio = new Audio(type === 'VICTORY' ? gtaAcceptedSound :gtaRejectedSound);
   audio.volume = 0.5; 
   audio.play().catch(e => console.error("Audio play failed", e));
 };

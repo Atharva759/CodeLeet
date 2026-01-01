@@ -25,7 +25,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    //this will help convert images less than 100kb into base64 so that they are embedded directly in the script
-    assetsInlineLimit: 100000, 
+    //this will help convert images less than 500kb into base64 so that they are embedded directly in the script
+    assetsInlineLimit: 500000, 
   },
 });

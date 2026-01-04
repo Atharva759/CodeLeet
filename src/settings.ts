@@ -2,6 +2,7 @@ export interface AppSettings{
     overlayEnabled: boolean;
     soundEnabled: boolean;
     volume:number;
+    theme:string;
 }
 
 
@@ -10,7 +11,8 @@ export const DEFAULT_SETTINGS:AppSettings = {
 
     overlayEnabled:true,
     soundEnabled:true,
-    volume:0.5
+    volume:0.5,
+    theme:'gta'
 }
 
 

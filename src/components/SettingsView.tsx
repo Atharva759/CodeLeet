@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AppSettings, loadSettings, saveSettings } from '../settings';
+import { THEMES } from '../themes';
+
 
 export default function SettingsView() {
   const [settings, setSettings] = useState<AppSettings>(loadSettings());
@@ -15,6 +17,17 @@ export default function SettingsView() {
     setSettings(newS);
     saveSettings(newS);
   };
+
+
+  const handleThemeChange=(e:React.ChangeEvent<HTMLSelectElement>)=>{
+
+    const news={...settings, theme:e.target.value};
+
+    setSettings(news);
+    saveSettings(news);
+  }
+
+
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -51,6 +64,28 @@ export default function SettingsView() {
           <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all ${settings.soundEnabled ? 'left-7' : 'left-1'}`} />
         </button>
       </div>
+
+
+
+      <div>
+        <div className="text-sm font-bold text-gray-200 mb-1">Visual Theme</div>
+        <select 
+          value={settings.theme}
+          onChange={handleThemeChange}
+          className="w-full bg-gray-800 text-white border border-gray-600 rounded p-2 text-sm focus:border-green-500 outline-none transition-colors"
+        >
+          {Object.entries(THEMES).map(([key, theme]) => (
+            <option key={key} value={key}>
+              {theme.name}
+            </option>
+          ))}
+        </select>
+        <div className="text-xs text-gray-500 mt-1">
+          Sets the banner style and sound effects.
+        </div>
+      </div>
+
+
 
       {/* Info */}
       <div className="bg-gray-800 p-3 rounded text-[10px] text-gray-400 mt-4 border border-gray-700">

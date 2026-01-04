@@ -4,12 +4,23 @@ import rejectedImg from '../../assets/rejected.png';
 import gtaAcceptedSound from '../../assets/gta-accepted.mp3'
 import gtaRejectedSound from '../../assets/gta-rejected.mp3'
 import { loadSettings } from '../settings';
+import { THEMES, DEFAULT_THEME } from '../themes';
 
-const playSound = (type: 'VICTORY' | 'DEFEAT') => {
 
-  const audio = new Audio(type === 'VICTORY' ? gtaAcceptedSound :gtaRejectedSound);
-  audio.volume = 0.5; 
-  audio.play().catch(e => console.error("Audio play failed", e));
+
+
+const playSound = (type: 'VICTORY' | 'DEFEAT', themeId:string) => {
+
+  
+    const theme=THEMES[themeId]||DEFAULT_THEME;
+
+    const src= type=='VICTORY'?theme.audio.victory : theme.audio.defeat;
+
+    const audio = new Audio(src);
+    audio.volume=0.5;
+
+    audio.play().catch(e=>console.error(e));
+
 };
 
 
@@ -19,6 +30,7 @@ export default function MemeOverlay() {
   const [type, setType] = useState<'VICTORY' | 'DEFEAT' | null>(null);
   const [settings, setSettings] = useState(loadSettings());
 
+  const currentTheme=THEMES[settings.theme]||THEMES[DEFAULT_THEME];
 
   useEffect(() => {
 
@@ -29,7 +41,6 @@ export default function MemeOverlay() {
 
   }, [])
   
-
   
   useEffect(() => {
     
@@ -54,7 +65,7 @@ export default function MemeOverlay() {
         
 
         if(settings.soundEnabled){
-          playSound(newType);
+          playSound(newType, settings.theme);
         }
 
 
@@ -67,7 +78,7 @@ export default function MemeOverlay() {
 
     targetWindow.addEventListener('leetcode-submission', handleSubmission);
     return () => targetWindow.removeEventListener('leetcode-submission', handleSubmission);
-  }, []);
+  }, [settings]);
 
   if (!mounted || !type) return null;
 
@@ -78,7 +89,7 @@ export default function MemeOverlay() {
       <div className={`relative flex flex-col items-center transition-transform duration-500 ${visible ? 'scale-100' : 'scale-90'}`}>
         
         <img 
-          src={type === 'VICTORY' ? acceptedImg : rejectedImg} 
+          src={type === 'VICTORY' ? currentTheme.images.victory : currentTheme.images.defeat} 
           alt={type}
           className="max-w-[600px] w-full rounded-xl shadow-2xl border-4 border-white/10"
         />
